@@ -6,15 +6,113 @@
   <title>IP Address Viewer</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b, #43c6ac, #f8ffae);
+      color: #fff;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
       text-align: center;
-      padding: 20px;
+      padding: 50px;
+      animation: bg-animation 20s infinite;
+      overflow: hidden;
+    }
+    @keyframes bg-animation {
+      0% { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
+      25% { background: linear-gradient(135deg, #43c6ac, #f8ffae); }
+      50% { background: linear-gradient(135deg, #ffcc33, #ff6666); }
+      75% { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+      100% { background: linear-gradient(135deg, #ff7e5f, #feb47b); }
     }
     h1 {
-      color: #333;
+      font-size: 4em;
+      color: #ffffff;
+      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+      animation: text-animation 5s infinite;
+    }
+    @keyframes text-animation {
+      0% { color: #ff0040; }
+      14% { color: #ff8000; }
+      28% { color: #ffff00; }
+      42% { color: #80ff00; }
+      57% { color: #00ff80; }
+      71% { color: #0040ff; }
+      85% { color: #8000ff; }
+      100% { color: #ff0040; }
+    }
+    #ipContainer {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+      margin-top: 30px;
+      animation: container-animation 2s infinite;
+    }
+    @keyframes container-animation {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
     p {
+      font-size: 2em;
+      animation: flicker-animation 1.5s infinite;
+    }
+    @keyframes flicker-animation {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    button {
+      padding: 10px 20px;
       font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #8d99ae;
+      color: #edf2f4;
+      animation: button-animation 2s infinite;
+    }
+    @keyframes button-animation {
+      0% { box-shadow: 0 0 5px #ff0040; }
+      50% { box-shadow: 0 0 20px #ff0040; }
+      100% { box-shadow: 0 0 5px #ff0040; }
+    }
+    button:hover {
+      background-color: #d90429;
+    }
+    .floating-animation {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      margin-left: -50px;
+      background: #ff0040;
+      border-radius: 50%;
+      animation: float 5s infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      animation: stars 10s infinite linear;
+    }
+    @keyframes stars {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+    .stars::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.5), 0 0 50px rgba(255, 255, 255, 0.5), 0 0 60px rgba(255, 255, 255, 0.5), 0 0 70px rgba(255, 255, 255, 0.5);
     }
   </style>
 </head>
@@ -23,6 +121,20 @@
   <div id="ipContainer">
     <p>Fetching your IP address...</p>
   </div>
-  <script src="init.js"></script>
+  <div class="floating-animation"></div>
+  <div class="stars"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('ipContainer').innerHTML = `<p>Your IP address is: ${data.ip}</p>`;
+        })
+        .catch(error => {
+          document.getElementById('ipContainer').innerHTML = `<p>Failed to fetch IP address</p>`;
+          console.error('Error fetching IP address:', error);
+        });
+    });
+  </script>
 </body>
 </html>
